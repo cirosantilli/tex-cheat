@@ -1,41 +1,255 @@
-a
+\def\bs{$\backslash$}
+\def\ob{$\{$}
+\def\cb{$\}$}
+\def\section#1{{\bf #1}}
+\def\subsection#1{{\bf #1}}
+\def\subsubsection#1{{\bf #1}}
 
-b
+\section{Symbols}
 
-\aa
+  \aa
 
-\dag
+  \dag
 
-\TeX\ space
+  \TeX\ space
 
-\'e
+  \'e
 
-\"o
+  \"o
 
-No dots: \i \j. Use when adding accents: \=\i
+  i and j without dots: \i \j. Use when adding accents: \=\i
 
-{\char65}
+  {\char65}
 
-Periods that don't follow upper case letters add some extra space after them assuming the end of a sentence.
+  \section{Periods}
 
-a. a
+  Periods that don't follow upper case letters add some extra space after them assuming the end of a sentence.
 
-A. a
+  a. a
 
-A\null. a
+  A. a
 
-group: {\bf bf}
+  A\null. a
 
-Escape special chars:
+\section{Special characters}
 
-\$ \# \& \% \_ \^{ } \~{ } $\{$ $\}$ $\backslash$
+  Escape the 10 special chars:
 
-Inline math: $x^2$
+  \~{ }: NBSP
 
-Displayed math: $$x^2$$
+  \#: macro arguments.
 
-Paragraph 1. \par
-Paragraph 2. \par
-Paragraph 3. \par
+  \$: inline math
+
+  \%: comments
+
+  \^{}: TODO
+
+  \&: alignment
+
+  \_: TODO
+
+  $\{$ $\}$: groups
+
+  $\backslash$: macros
+
+  There are also some special characters that appear as different things than their ASCII counterpart!
+
+  \item pipe: | . Appears as an em-dash
+  \item less and greater than < > Appear as an inverted ! and ?
+
+  This weird stuff can be corrected with an encoding package in LaTeX.
+
+  These are all the special chars that need to be escaped, the following don't: ` ! @ * () + = [  ] ? / , .
+
+\section{rules}
+
+  \hrule
+
+  \vrule height .25in
+
+\section{Assignment}
+
+\section{Registers}
+
+  Equal sign = and spaces when assigning are optional, unless their absence would generate ambiguity.
+
+  To print their values use \bs number.
+
+  \count255=1
+
+  \number\count255
+
+  \count255 2
+
+  \number\count255
+
+  %\count2553
+
+  There are 6 types of registers:
+
+  typebox: a box
+
+  count:   a number
+
+  dimen:   a dimension
+
+  muskip:  muglue
+
+  skip:    glue
+
+  toks:    a token list
+
+\section{Conditional}
+
+\section{if}
+
+  TODO
+
+\section{Macros}
+
+  There are two types of backslash escapes: control words and control symbols.
+
+  Control words are the regular macros like the ones that can be defined with \bs def. Eat up whitespace after them, so you need to preserve it with \bs or braces if wanted:
+
+  \TeX without backslash
+
+  \TeX\ with backslash
+
+  \TeX{} with braces
+
+  Control symbols backslashes followed by other non alphanumeric characters. They are often escapes for characters that have special meanings like percent \% for comments. They don't eat up the whitespace after them: \% after.
+
+  \subsection{Macros vs primitives}
+
+    Primitive commands can have any weird call syntax.
+
+    Macros have a fixed call syntax.
+
+  \subsection{Macros call}
+
+    You can call macro parameters wither with or without braces.
+
+    If you don't use braces, it breaks at spaces.
+
+    \def\f#1#2{#1 and #2}
+
+    TODO what is wrong here:
+
+    \f apple orange
+
+    For arguments with spaces you need braces:
+
+    \f{apple orange}{pear}
+
+\section{Groups}
+
+  Group: {\bf bf}
+
+\section{relax}
+
+  Do nothing. NOOP. When you need a command for some syntactical reason.
+
+  \relax
+
+\section{number}
+
+  Converts an internal number to a number on the output.
+
+  \count255 = 1
+
+  \bs count255 = \number\count255
+
+\section{pageno}
+
+  Current page number: \number\pageno
+
+\section{Category code}
+
+  Each character read from input has a category. There are 16 categories:
+
+  0 : Escape character \bs
+
+  1 : Beginning of group \ob
+
+  2 : End of group \cb
+
+  3 : Math shift \$
+
+  4 : Alignment tab \&
+
+  5 : End of line = ASCII return
+
+  6 : Macro parameter \#
+
+  7 : Superscript \^{}
+
+  8 : Subscript \_
+
+  9 : Ignored character = ASCII null
+
+  10: Space and horizontal tab
+
+  11: Letter A . . . Z and a . . . z
+
+  12: Other character (everything not listed above or below)
+
+  13: Active character \~  ASCII form feed
+
+  14: Comment character \%
+
+  15: Invalid character = ASCII delete
+
+  It is possible to change the category of a character with \bs catcode.
+
+\section{Spacing}
+
+  \bs break: start new page.
+
+  \break
+
+\section{Document parts}
+
+  \subsection{Paragraphs}
+
+  \subsection{par}
+
+    Paragraphs are created at double newline.
+
+    It is also possible to create them with the \bs par command.
+
+    Paragraph 1. \par
+    Paragraph 2. \par
+    Paragraph 3. \par
+
+  \subsection{list}
+
+  \subsection{List items}
+
+    TeX has basic support for list items, but it is very basic and not intuitive at times.
+
+  \subsection{Math}
+
+    Inline math: $x^2$
+
+    Displayed math: $$x^2$$
+
+    Backslash math like \bs [ \bs ] is LaTeX only.
+
+  \subsection{footline}
+
+  \subsection{Footer}
+
+  \subsection{headline}
+
+  \subsection{Header}
+
+    Content that will appear below and above every page.
+
+    \headline = {Header}
+
+    \footline = {Footer}
+
+    Only apply starting to the first the next page after they are set.
 
 \end

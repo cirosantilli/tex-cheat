@@ -10,4 +10,4 @@ clean:
 	rm -f *.dvi *.log
 
 view: all
-	xdg-open main.dvi 
+	xdg-open main.dvi
