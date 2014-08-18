@@ -1,9 +1,346 @@
 \def\bs{$\backslash$}
-\def\ob{$\{$}
-\def\cb{$\}$}
+% Brace Open
+\def\bo{$\{$}
+% Brace Close
+\def\bc{$\}$}
+% Computer code, until I find a better method.
+\def\code#1{#1}
 \def\section#1{{\bf #1}}
 \def\subsection#1{{\bf #1}}
 \def\subsubsection#1{{\bf #1}}
+
+abcd
+
+\section{Programming constructs}
+
+  \TeX is Turing complete, and can do file IO or run shell commands, although those capabilities are disabled / restricted by default on most distros.
+
+  This section contains a few constructs that remind me strongly of programming languages.
+
+  \subsection{Assignment}
+
+  \subsection{Registers}
+
+  \subsection{Variables}
+
+    Equal sign = and spaces when assigning are optional, unless their absence would generate ambiguity.
+
+    To print their values use \bs number.
+
+    \count255=1
+
+    \number\count255
+
+    \count255 2
+
+    \number\count255
+
+    %\count2553
+
+  \subsection{new commands}
+
+    The \code{new} family of commands reserves and names a resource to be used later, e.g. \code{newcount} or \code{newwrite}.
+
+    They are the preferred way of using those resources to avoid clashes.
+
+    There are 6 types of registers:
+
+    \item newcount:  a number
+    \item newdimen:  a dimension
+    \item newskip:   glue
+    \item newmuskip: muglue
+    \item newtoks:   a token list
+    \item newbox:    box
+
+    There are also other types of resources:
+
+    \item newread and newwrite: IO streams
+    \item newfam:               font family
+    \item newinsert:
+    \item newlanguage:
+
+    Usage:
+
+    \newcount\x
+    \x=1
+    \number\x
+
+  \subsection{Conditional}
+
+  \subsection{if}
+
+  \subsection{else}
+
+  \subsection{fi}
+
+  \subsection{ifx}
+
+    \ifx\ifvar\undefined
+      ifvar undefined
+    \else
+      \if\ifvar0
+        ifvar = 0
+      \else
+        ifvar != 0
+      \fi
+    \fi
+
+    \def\ifvar{0}
+
+    \ifx\ifvar\undefined
+      ifvar undefined
+    \else
+      \if\ifvar0
+        ifvar = 0
+      \else
+        ifvar != 0
+      \fi
+    \fi
+
+    \def\ifvar{1}
+
+    \ifx\ifvar\undefined
+      ifvar undefined
+    \else
+      \if\ifvar0
+        ifvar = 0
+      \else
+        ifvar != 0
+      \fi
+    \fi
+
+  \subsection{ifnum}
+
+  \subsection{ifdim}
+
+    Compare two numbers, only $=,$ $<$ and $>$ are possible operators.
+
+    \newcount\a
+    \newcount\b
+    \a=1
+    \b=2
+
+    \ifnum\a<\b
+      $1 < 2$
+    \else
+      $1 >= 2$
+    \fi
+
+    \ifnum\a<2
+      $1 < 2$
+    \else
+      $1 >= 2$
+    \fi
+
+  \subsection{ifodd}
+
+    Check if odd. There is no \code{ifeven} primitive.
+
+    \ifodd1
+      1 is odd
+    \else
+      1 is even
+    \fi
+
+  \subsection{relax}
+
+    Do nothing. NOOP. When you need a command for some syntactical reason.
+
+    \relax
+
+  \subsection{undefined}
+
+    Value of undefined macros.
+
+    Normally, using an undefined macro leads to an error, but in some cases it may appear, e.g. when doing ifx.
+
+  \subsection{number}
+
+    Converts an internal number to a number on the output.
+
+    \count255 = 1
+
+    count255 = \number\count255
+
+  \subsection{the}
+
+    TODO. Like number but can format anything, e.g. dimen, etc.
+
+    \count255 = 1
+
+    count255 = \the\count255
+
+    \dimen255 = 1cm
+
+    dimen255 = \the\dimen255
+
+  \subsection{Arithmetic}
+
+    \subsubsection{Sum}
+
+    \subsubsection{Subtraction}
+
+    \subsubsection{advance}
+
+      \newcount\x
+      \x=1
+      \advance\x by 1
+      $1 + 1 = \number\x$
+
+      \newcount\x
+      \x=1
+      \advance\x by -1
+      $1 - 1 = \number\x$
+
+    \subsubsection{multiply}
+
+      \newcount\x
+      \x=2
+      \multiply\x by 2
+      $2 * 2 = \number\x$
+
+    \subsubsection{divide}
+
+      \newcount\x
+      \x=4
+      \divide\x by 2
+      $4 / 2 = \number\x$
+
+  \subsection{def}
+
+  \subsection{Macros}
+
+    There are two types of backslash escapes: control words and control symbols.
+
+    Control words are the regular macros like the ones that can be defined with \bs def. Eat up whitespace after them, so you need to preserve it with \bs or braces if wanted:
+
+    \TeX without backslash
+
+    \TeX\ with backslash
+
+    \TeX{} with braces
+
+    Control symbols backslashes followed by other non alphanumeric characters. They are often escapes for characters that have special meanings like percent \% for comments. They don't eat up the whitespace after them: \% after.
+
+    \subsection{Macros vs primitives}
+
+      Primitive commands can have any weird call syntax: sometimes the arguments are separated by English words like by in \code{divide by } or \code{read to}
+
+      Macros have a fixed call syntax.
+
+    \subsection{Macro call}
+
+      You can call macro parameters wither with or without braces.
+
+      If you don't use braces, it breaks at spaces.
+
+      \def\f#1#2{#1 and #2}
+
+      TODO what is wrong here:
+
+      \f apple orange
+
+      For arguments with spaces you need braces:
+
+      \f{apple orange}{pear}
+
+    \subsection{Infinite expansion loop}
+
+      The following code would generate an infinite expansion loop: %\def\a{\a}\a
+
+      Good possibility for a denial of service attack.
+
+      The following leads to a "TeX capacity exceeded" error: %\def\a{\a{}b}\a
+
+  \subsection{let}
+
+    TODO vs def.
+
+  \subsection{Groups}
+
+    Group: {\bf bf}
+
+  \subsection{input}
+
+  \subsection{endinput}
+
+    Paste content of given file at current location, and then process it as if it were there from the start.
+
+    If an \code{endinput} is found, stop.
+
+    \input input.texinput
+
+  \subsection{File IO}
+
+  \subsection{openout}
+
+  \subsection{newwrite}
+
+  \subsection{write}
+
+  \subsection{newread}
+
+  \subsection{read}
+
+  \subsection{closeout}
+
+    Write to a stream. \TeX\ as built-in file IO, besides \code{write18} which if enabled allows you to run arbitrary shell commands.
+
+    Streams 0-15 are free to use, but it is best to allocate to them with \code{newwrite} and \code{newread}.
+
+    Example:
+
+    \newwrite\file
+    \immediate\openout\file=io.tmp
+    \immediate\write\file{From TeX!}
+    \immediate\write\file{From TeX 2!}
+    \immediate\closeout\file
+
+    It is not possible to append to files: http://tex.stackexchange.com/questions/11796/how-can-i-open-a-file-in-append-mode
+
+    \code{read} reads one line from a file, and stores it's value in a command: TODO get working
+
+    %\newread\file
+    %\immediate\openin\file=io.tmp
+    %\immediate\read\file to \line
+    %\line
+    %\immediate\read\file to \line
+    %\line
+    %\immediate\closein\file
+
+    Some streams are special:
+
+    18: send command to shell. This allows you to run an arbitrary command. Disabled by default on all distros: you need to give the \code{--shell-escape} option on invocation to activate it.
+
+    E.g.:
+
+    \immediate\write18{echo write18}
+
+  \subsection{immediate}
+
+    Do an operation before further processing happens. E.g., there are things for which one has to wait to know, e.g. page numbers.
+
+  \subsection{stdout}
+
+  \subsection{message}
+
+    Write to stdout.
+
+    \message{Hello world from TeX!}
+
+  \subsection{Security}
+
+    Since \TeX\ is a programming language with IO possibilities, it is possible to exploit that to attack computers.
+
+    The following attacks may be possible:
+
+    - writing to local files to create a virus. This virus could also read local files, and then retrieve the information when the attacked user publishes something
+
+    - read server files to prepare for a further attack
+
+    - infinite loops to consume server CPU
+
+    - write to an infinite amount of files to consume user / server disk
 
 \section{Symbols}
 
@@ -35,7 +372,7 @@
 
   Escape the 10 special chars:
 
-  \~{ }: NBSP
+  \~{}: NBSP
 
   \#: macro arguments.
 
@@ -62,107 +399,39 @@
 
   These are all the special chars that need to be escaped, the following don't: ` ! @ * () + = [  ] ? / , .
 
+  \subsection{at sign}
+
+    While not special by default, the @ sign is used by convention on kernel commands that should not be overridden by end users. This works because @ is not from the category which may appear in macros, although if you really want to shoot yourself in the foot you can change it's category with \code{catcode} and do it.
+
+    http://tex.stackexchange.com/questions/6240/why-do-latex-internal-commands-have-an-in-them
+
 \section{rules}
 
   \hrule
 
-  \vrule height .25in
+  TODO vrule is giving me underfull vbox.
 
-\section{Assignment}
+  % \vrule height 1mm
 
-\section{Registers}
+\section{Spacing}
 
-  Equal sign = and spaces when assigning are optional, unless their absence would generate ambiguity.
+  \bs break: start new page.
 
-  To print their values use \bs number.
-
-  \count255=1
-
-  \number\count255
-
-  \count255 2
-
-  \number\count255
-
-  %\count2553
-
-  There are 6 types of registers:
-
-  typebox: a box
-
-  count:   a number
-
-  dimen:   a dimension
-
-  muskip:  muglue
-
-  skip:    glue
-
-  toks:    a token list
-
-\section{Conditional}
-
-\section{if}
-
-  TODO
-
-\section{Macros}
-
-  There are two types of backslash escapes: control words and control symbols.
-
-  Control words are the regular macros like the ones that can be defined with \bs def. Eat up whitespace after them, so you need to preserve it with \bs or braces if wanted:
-
-  \TeX without backslash
-
-  \TeX\ with backslash
-
-  \TeX{} with braces
-
-  Control symbols backslashes followed by other non alphanumeric characters. They are often escapes for characters that have special meanings like percent \% for comments. They don't eat up the whitespace after them: \% after.
-
-  \subsection{Macros vs primitives}
-
-    Primitive commands can have any weird call syntax.
-
-    Macros have a fixed call syntax.
-
-  \subsection{Macros call}
-
-    You can call macro parameters wither with or without braces.
-
-    If you don't use braces, it breaks at spaces.
-
-    \def\f#1#2{#1 and #2}
-
-    TODO what is wrong here:
-
-    \f apple orange
-
-    For arguments with spaces you need braces:
-
-    \f{apple orange}{pear}
-
-\section{Groups}
-
-  Group: {\bf bf}
-
-\section{relax}
-
-  Do nothing. NOOP. When you need a command for some syntactical reason.
-
-  \relax
-
-\section{number}
-
-  Converts an internal number to a number on the output.
-
-  \count255 = 1
-
-  \bs count255 = \number\count255
+  \break
 
 \section{pageno}
 
   Current page number: \number\pageno
+
+\section{time}
+
+  year:  \number\year
+
+  month: \number\month
+
+  day:   \number\day
+
+  time:  \number\time. Minutes after midnight.
 
 \section{Category code}
 
@@ -170,9 +439,9 @@
 
   0 : Escape character \bs
 
-  1 : Beginning of group \ob
+  1 : Beginning of group \bo
 
-  2 : End of group \cb
+  2 : End of group \bc
 
   3 : Math shift \$
 
@@ -190,11 +459,11 @@
 
   10: Space and horizontal tab
 
-  11: Letter A . . . Z and a . . . z
+  11: Letter a-zA-Z
 
   12: Other character (everything not listed above or below)
 
-  13: Active character \~  ASCII form feed
+  13: Active character \~{} ASCII form feed
 
   14: Comment character \%
 
@@ -202,13 +471,9 @@
 
   It is possible to change the category of a character with \bs catcode.
 
-\section{Spacing}
-
-  \bs break: start new page.
-
-  \break
-
 \section{Document parts}
+
+  This section documents commands which deal with high level document constructs like paragraphs and lists.
 
   \subsection{Paragraphs}
 
@@ -236,6 +501,12 @@
 
     Backslash math like \bs [ \bs ] is LaTeX only.
 
+  \subsection{Hyperlinks}
+
+    TODO how?
+
+    http://tex.stackexchange.com/questions/83847/the-errors-of-tex-with-hyperlinks
+
   \subsection{footline}
 
   \subsection{Footer}
@@ -246,10 +517,19 @@
 
     Content that will appear below and above every page.
 
-    \headline = {Header}
+    \headline={Header}
 
-    \footline = {Footer}
+    \footline={Footer}
 
     Only apply starting to the first the next page after they are set.
 
+\section{Error messages}
+
+  \subsection{Underfull hbox, vbox}
+
+    Very hard to get rid of!
+
+  \subsection{TeX capacity exceeded, sorry [input stack size=5000].}
+
+    Stack overflow? Achieved with: %\def\a{\a{}b}\a
 \end
