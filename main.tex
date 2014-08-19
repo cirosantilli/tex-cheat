@@ -65,80 +65,104 @@
 
   \subsection{Conditional}
 
-  \subsection{if}
+    \subsubsection{if}
 
-  \subsection{else}
+    \subsubsection{else}
 
-  \subsection{fi}
+    \subsubsection{fi}
 
-  \subsection{ifx}
+    \subsubsection{ifx}
 
-    \ifx\ifvar\undefined
-      ifvar undefined
-    \else
-      \if\ifvar0
-        ifvar = 0
+      \ifx\ifvar\undefined
+        ifvar undefined
       \else
-        ifvar != 0
+        \if\ifvar0
+          ifvar = 0
+        \else
+          ifvar != 0
+        \fi
       \fi
-    \fi
 
-    \def\ifvar{0}
+      \def\ifvar{0}
 
-    \ifx\ifvar\undefined
-      ifvar undefined
-    \else
-      \if\ifvar0
-        ifvar = 0
+      \ifx\ifvar\undefined
+        ifvar undefined
       \else
-        ifvar != 0
+        \if\ifvar0
+          ifvar = 0
+        \else
+          ifvar != 0
+        \fi
       \fi
-    \fi
 
-    \def\ifvar{1}
+      \def\ifvar{1}
 
-    \ifx\ifvar\undefined
-      ifvar undefined
-    \else
-      \if\ifvar0
-        ifvar = 0
+      \ifx\ifvar\undefined
+        ifvar undefined
       \else
-        ifvar != 0
+        \if\ifvar0
+          ifvar = 0
+        \else
+          ifvar != 0
+        \fi
       \fi
-    \fi
 
-  \subsection{ifnum}
+    \subsubsection{ifnum}
 
-  \subsection{ifdim}
+    \subsubsection{ifdim}
 
-    Compare two numbers, only $=,$ $<$ and $>$ are possible operators.
+      Compare two numbers, only $=,$ $<$ and $>$ are possible operators.
 
-    \newcount\a
-    \newcount\b
-    \a=1
-    \b=2
+      \newcount\a
+      \newcount\b
+      \a=1
+      \b=2
 
-    \ifnum\a<\b
-      $1 < 2$
-    \else
-      $1 >= 2$
-    \fi
+      \ifnum\a<\b
+        $1 < 2$
+      \else
+        $1 >= 2$
+      \fi
 
-    \ifnum\a<2
-      $1 < 2$
-    \else
-      $1 >= 2$
-    \fi
+      \ifnum\a<2
+        $1 < 2$
+      \else
+        $1 >= 2$
+      \fi
 
-  \subsection{ifodd}
+    \subsubsection{ifodd}
 
-    Check if odd. There is no \code{ifeven} primitive.
+      Check if odd. There is no \code{ifeven} primitive.
 
-    \ifodd1
-      1 is odd
-    \else
-      1 is even
-    \fi
+      \ifodd1
+        1 is odd
+      \else
+        1 is even
+      \fi
+
+  \subsection{loop}
+
+  \subsection{repeat}
+
+    http://tex.stackexchange.com/questions/3617/what-is-the-canonical-way-to-write-a-for-loop-macro
+
+    TODO why is this not documented at http://www.tug.org/utilities/plain/cseq.html ? It is however present on the TeXbook.
+
+    \newcount\foo
+    \foo=10
+    \loop
+      \number\foo\ 
+      \advance \foo -1
+    \ifnum\foo>0
+    \repeat
+
+    \subsubsection{Infinite expansion loop}
+
+      The following code would generate an infinite expansion loop: %\def\a{\a}\a
+
+      Good possibility for a denial of service attack.
+
+      The following leads to a "TeX capacity exceeded" error: %\def\a{\a{}b}\a
 
   \subsection{relax}
 
@@ -226,7 +250,7 @@
 
       Macros have a fixed call syntax.
 
-    \subsection{Macro call}
+    \subsection{Macro definition and call}
 
       You can call macro parameters wither with or without braces.
 
@@ -242,21 +266,37 @@
 
       \f{apple orange}{pear}
 
-    \subsection{Infinite expansion loop}
+      It is possible to use separators between the macro parameters list. The call passes the smallest matching sequence of characters to the macro.
 
-      The following code would generate an infinite expansion loop: %\def\a{\a}\a
+      \def\f#1ab#2{#1 after ab #2}
 
-      Good possibility for a denial of service attack.
+      \f{asdf}ab{qwer}
 
-      The following leads to a "TeX capacity exceeded" error: %\def\a{\a{}b}\a
+  \subsection{Keywords}
+
+    \TeX\ has 25 keywords. They are only interpreted as magic in certain contexts.
+
+    Most of them are measure units. Some are parts of insane primitives like multiply by.
+
+    at by bp cc cm dd depth em ex fil fill filll height in minus mu pc plus pt sp spread to true width
 
   \subsection{let}
 
     TODO vs def.
 
+  \subsection{begingroup}
+
+  \subsection{endgroup}
+
   \subsection{Groups}
 
-    Group: {\bf bf}
+    Delimited by either braces \bo \bc or by begin / end group macros. Both are equivalent, but cannot be mixed on the same group, but can be nested.
+
+    Some commands only affect the current group.
+
+    {\it it}
+
+    \begingroup\it it\endgroup
 
   \subsection{input}
 
@@ -308,11 +348,17 @@
 
     Some streams are special:
 
+  \subsection{write18}
+
     18: send command to shell. This allows you to run an arbitrary command. Disabled by default on all distros: you need to give the \code{--shell-escape} option on invocation to activate it.
 
     E.g.:
 
     \immediate\write18{echo write18}
+
+    It does not seem possible to paste shell output directly into plain \TeX: http://tex.stackexchange.com/questions/16790/write18-capturing-shell-script-output-as-command-variable
+
+    For that, you need the input pipe extension, which is pdflatex specific. The only \TeX\ solution seems to be to write it to a temporary file, and then read the file.
 
   \subsection{ifeof}
 
@@ -377,13 +423,13 @@
 
     The following attacks may be possible:
 
-    - writing to local files to create a virus. This virus could also read local files, and then retrieve the information when the attacked user publishes something
+    \item{} writing to local files to create a virus. This virus could also read local files, and then retrieve the information when the attacked user publishes something
 
-    - read server files to prepare for a further attack
+    \item{} read server files to prepare for a further attack
 
-    - infinite loops to consume server CPU
+    \item{} infinite loops to consume server CPU
 
-    - write to an infinite amount of files to consume user / server disk
+    \item{} write to an infinite amount of files to consume user / server disk
 
 \section{Symbols}
 
@@ -410,6 +456,10 @@
   A. a
 
   A\null. a
+
+  \subsection{Math symbols}
+
+    Bullet: $\bullet$
 
 \section{Special characters}
 
@@ -452,6 +502,44 @@
 
     http://tex.stackexchange.com/questions/6240/why-do-latex-internal-commands-have-an-in-them
 
+  \subsection{Quotation marks}
+
+  \subsection{Backtick}
+
+  \subsection{Apostrophe}
+
+    First, note that there are 4 Unicode characters commonly used for English quotations: single and double opening and closing curly braces.
+
+    They can be generated with single or double the apostrophe and backticks: ` `` ' ''.
+
+    If it appears before certain characters (TODO which), the backtick has a special meaning: it gets the ASCII code number corresponding to a character, therefore doing the opposite of the \bs char primitive. For this reason it is often used in conjunction with \bs catcode.
+
+    A = \number`A
+
+    Without \bs number it disappears: `A
+
+    To escape that, use braces: {`}A
+
+    When escaped, a single backtick becomes a single curly brace.
+
+    Double backticks are preserved and converted to a single the double curly brace character: ``A''
+
+    On copy paste, most viewers do give the actual Unicode characters, so this is no good for code listings.
+
+    TODO: how to write literal apostrophe and double quotes in plain \TeX? For LaTeX: http://tex.stackexchange.com/questions/63345/how-to-make-a-real-apostrophe-or-single-quote-in-latex
+
+  \subsection{Kerning}
+
+    Some letter pairs are get a slightly greater separation in professional systems to make them look better. \TeX\ takes that into account. AV, AY, PA, and AT
+
+  \subsection{Ligatures}
+
+    \TeX produces by default typographical ligatures. This means it joins certain characters together into a single Unicode ligature character. On copy paste however, most viewers give back the double characters for most ligatures.
+
+    Ligatures can also be made up of more than 2 characters.
+
+    Examples: ff. fi, fl, ffi, ffl, --, ---
+
 \section{Styles}
 
   \subsection{Boldface}
@@ -466,11 +554,65 @@
 
     {\it italic}
 
+  \subsection{Slanted}
+
+  \subsection{sl}
+
+    {\sl slanted}
+
   \subsection{Teletype}
 
   \subsection{tt}
 
     {\tt teletype}
+
+  \subsection{Roman}
+
+  \subsection{rm}
+
+    {\rm roman} The default.
+
+  \subsection{Old style}
+
+  \subsection{oldstyle}
+
+    $\oldstyle Aa$
+
+  \subsection{Calligraphic capitals}
+
+  \subsection{cal}
+
+    $\cal AB$
+
+  \subsection{Small caps}
+
+  \subsection{sc}
+
+    Upper case letters that have almost the same height as lowercase letters.
+
+    Used in the middle of text to reduce the emphasis given to certain caps.
+
+    \TeX\ has support for them, in particular for fonts which have explicit small caps glyphs.
+
+    Regular: "Asdf ASDF asdf."
+
+    Small caps: TODO how? %"Asdf {\sc ASDF} asdf."
+
+\section{fonts}
+
+  Font encoding map with bf, tt and it.
+
+  \count255 = 0
+  \loop
+    [\number\count255 =
+      \char\number\count255 \
+      {\bf \char\number\count255}
+      {\it \char\number\count255}
+      {\tt \char\number\count255}
+    ]
+  \ifnum\count255 < 127
+  \advance\count255 by 1
+  \repeat
 
 \section{rules}
 
@@ -497,6 +639,19 @@
     a\ \ \ \ \ a
 
     aaaaaaa
+
+\section{Modes}
+
+  \TeX\ is always in either of the 6 modes:
+
+  \item{} Vertical mode
+  \item{} Internal vertical mode
+  \item{} Horizontal mode
+  \item{} Restricted horizontal mode
+  \item{} Math mode
+  \item{} Display math mode
+
+  What commands do may be affected by the current mode.
 
 \section{pageno}
 
@@ -542,6 +697,8 @@
 
 \section{Category code}
 
+\section{catcode}
+
   Each character read from input has a category. There are 16 categories:
 
   0 : Escape character \bs
@@ -576,7 +733,9 @@
 
   15: Invalid character = ASCII delete
 
-  It is possible to change the category of a character with \bs catcode.
+  It is possible to change the category of a character with the \bs catcode primitive.
+
+  The catcode primitive is often followed by a backtick to convert the character to a number which is its expected input: http://tex.stackexchange.com/questions/3336/is-it-catcode-or-catcode
 
 \section{Document parts}
 
@@ -608,12 +767,28 @@
 
     TODO http://tex.stackexchange.com/questions/63789/inserting-an-image-in-plain-tex
 
+  \subsection{obeylines}
+
+  \subsection{obeyspaces}
+
   \subsection{verbatim}
 
     The main tricks are:
 
     \item{} change the catcode of special characters so that they are not special anymore
     \item{} preserve whitespace
+
+    Blank lines are not preserved by obeylines: it only breaks the line on a newline character once.
+
+    \begingroup
+      \obeylines
+      \obeyspaces
+      a      b
+      c
+
+
+      d
+    \endgroup
 
     \subsubsection{string}
 

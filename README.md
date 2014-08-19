@@ -61,3 +61,9 @@ It seems that `pdflatex` is a complete rewrite with options only supported there
     Knuth's TeXbook: the de-facto standard.
 
     Fun to read, but a bit too verbose.
+
+-   <http://www.tug.org/utilities/plain/cseq.html>
+
+    TeX Live primitives, most with examples. The implementor's doc.
+
+    But there seem to be some commands which hare not listed there, e.g. `loop` or `obeyspaces`. TODO why?
