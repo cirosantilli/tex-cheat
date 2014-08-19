@@ -9,8 +9,6 @@
 \def\subsection#1{{\bf #1}}
 \def\subsubsection#1{{\bf #1}}
 
-abcd
-
 \section{Programming constructs}
 
   \TeX is Turing complete, and can do file IO or run shell commands, although those capabilities are disabled / restricted by default on most distros.
@@ -45,19 +43,19 @@ abcd
 
     There are 6 types of registers:
 
-    \item newcount:  a number
-    \item newdimen:  a dimension
-    \item newskip:   glue
-    \item newmuskip: muglue
-    \item newtoks:   a token list
-    \item newbox:    box
+    \item{} newcount:  a number
+    \item{} newdimen:  a dimension
+    \item{} newskip:   glue
+    \item{} newmuskip: muglue
+    \item{} newtoks:   a token list
+    \item{} newbox:    box
 
     There are also other types of resources:
 
-    \item newread and newwrite: IO streams
-    \item newfam:               font family
-    \item newinsert:
-    \item newlanguage:
+    \item{} newread and newwrite: IO streams
+    \item{} newfam:               font family
+    \item{} newinsert:
+    \item{} newlanguage:
 
     Usage:
 
@@ -300,13 +298,13 @@ abcd
 
     \code{read} reads one line from a file, and stores it's value in a command: TODO get working
 
-    %\newread\file
-    %\immediate\openin\file=io.tmp
-    %\immediate\read\file to \line
-    %\line
-    %\immediate\read\file to \line
-    %\line
-    %\immediate\closein\file
+    \newread\file
+    \immediate\openin\file=io.tmp
+    \immediate\read\file to \fileline
+    \fileline\par
+    \immediate\read\file to \fileline
+    \fileline\par
+    \immediate\closein\file
 
     Some streams are special:
 
@@ -315,6 +313,30 @@ abcd
     E.g.:
 
     \immediate\write18{echo write18}
+
+  \subsection{ifeof}
+
+    True if at end of file.
+
+    TODO get working
+
+    \def\eofhuman#1{
+      \ifeof#1
+        At end of file.\par
+      \else
+        Not at end of file.\par
+      \fi
+    }
+
+    \newread\file
+    \immediate\openin\file=io.tmp
+    \immediate\read\file to \fileline
+    \fileline\par
+    \eofhuman\file
+    \immediate\read\file to \fileline
+    \fileline\par
+    \eofhuman\file
+    \immediate\closein\file
 
   \subsection{immediate}
 
@@ -327,6 +349,27 @@ abcd
     Write to stdout.
 
     \message{Hello world from TeX!}
+
+  \subsection{show}
+
+    Print to stdout what the given command maps to.
+
+    Debugging tool.
+
+    TODO why is this giving compilation errors?
+
+    %\def\a{asdf}
+    %\show\a
+    %\show\def
+
+    Produces on terminal something like:
+
+    %> \a=macro:
+    %->asdf.
+    %l.605   \show\a
+
+    %> \def=\def.
+    %l.606   \show\def
 
   \subsection{Security}
 
@@ -356,7 +399,7 @@ abcd
 
   i and j without dots: \i \j. Use when adding accents: \=\i
 
-  {\char65}
+  char65 char66 = {\char65}{\char66}
 
   \section{Periods}
 
@@ -392,26 +435,52 @@ abcd
 
   There are also some special characters that appear as different things than their ASCII counterpart!
 
-  \item pipe: | . Appears as an em-dash
-  \item less and greater than < > Appear as an inverted ! and ?
+  \item{} pipe: | . Appears as an em-dash
+  \item{} less and greater than < > Appear as an inverted ! and ?
 
   This weird stuff can be corrected with an encoding package in LaTeX.
 
   These are all the special chars that need to be escaped, the following don't: ` ! @ * () + = [  ] ? / , .
 
-  \subsection{at sign}
+  \subsection{at sign @}
 
-    While not special by default, the @ sign is used by convention on kernel commands that should not be overridden by end users. This works because @ is not from the category which may appear in macros, although if you really want to shoot yourself in the foot you can change it's category with \code{catcode} and do it.
+    While not special by default, the @ sign is used by convention LaTeX defined kernel commands that should not be overridden by end users. This works because @ is from category 11 which may appear in macro names.
+
+    \def\@{at}
+
+    \@
 
     http://tex.stackexchange.com/questions/6240/why-do-latex-internal-commands-have-an-in-them
+
+\section{Styles}
+
+  \subsection{Boldface}
+
+  \subsection{bf}
+
+    {\bf bold}
+
+  \subsection{Italics}
+
+  \subsection{it}
+
+    {\it italic}
+
+  \subsection{Teletype}
+
+  \subsection{tt}
+
+    {\tt teletype}
 
 \section{rules}
 
   \hrule
 
-  TODO vrule is giving me underfull vbox.
+  TODO vrule is giving me underfull vbox. How to avoid?
 
-  % \vrule height 1mm
+  \vrule height 1mm
+
+\section{Positioning}
 
 \section{Spacing}
 
@@ -419,9 +488,47 @@ abcd
 
   \break
 
+  \subsection{Control space}
+
+    Spaces can be forced with a \bs space sequence.
+
+    Multiple consecutive spaces can be added like that.
+
+    a\ \ \ \ \ a
+
+    aaaaaaa
+
 \section{pageno}
 
   Current page number: \number\pageno
+
+\section{Hyphens}
+
+  Used to break words on long lines.
+
+  \section{defaulthyphenchar}
+
+    The default break char for a font.
+
+    \bs number\bs defaulthyphenchar = \number\defaulthyphenchar = "{\char\defaulthyphenchar}"
+
+  \section{hyphenchar}
+
+    TODO
+
+  \section{discretionary}
+
+    Propose a possible word break on a large word and say what character \TeX\ can insert there if he wants to break.
+
+    TODO: why the following line is not breaking at discretionary?
+
+    %aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\discretionary{+}{=}{c}bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+
+  \section{discretionary hyphen}
+
+    %\bs -. Same as \discretionary{\char\hyphenchar}{}{}
+
+    %aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 
 \section{time}
 
@@ -493,13 +600,30 @@ abcd
 
     TeX has basic support for list items, but it is very basic and not intuitive at times.
 
-  \subsection{Math}
+  \subsection{Table}
 
-    Inline math: $x^2$
+    TODO
 
-    Displayed math: $$x^2$$
+  \subsection{Images}
 
-    Backslash math like \bs [ \bs ] is LaTeX only.
+    TODO http://tex.stackexchange.com/questions/63789/inserting-an-image-in-plain-tex
+
+  \subsection{verbatim}
+
+    The main tricks are:
+
+    \item{} change the catcode of special characters so that they are not special anymore
+    \item{} preserve whitespace
+
+    \subsubsection{string}
+
+      TODO how does it work exactly? Seems to remove special meaning of special chars somehow.
+
+      {\string \TeX. After.}
+
+  \subsection{Syntax highlighting}
+
+    Hell on Earth probably, even with LaTeX packages it is difficult.
 
   \subsection{Hyperlinks}
 
@@ -522,6 +646,121 @@ abcd
     \footline={Footer}
 
     Only apply starting to the first the next page after they are set.
+
+  \subsection{Math}
+
+    Plain \TeX\ was built with hardcore math typesetting in mind, and has become the de-facto standard mathematical plain-text notation.
+
+    Inline math: $x^2$
+
+    Displayed math:
+
+    $$x^2$$
+
+    Backslash math like \bs [ \bs ] is LaTeX only.
+
+    \subsubsection{subscript}
+
+      $$ ab_cd $$
+
+      $$ ab_{cd} $$
+
+    \subsubsection{superscript}
+
+      $$ ab^cd $$
+
+      $$ ab^{cd} $$
+
+    \subsubsection{underline}
+
+    \subsubsection{overline}
+
+      $\underline x+1$
+
+      $\underline{x+1}$
+
+      $\overline x+1$
+
+      $\overline{x+1}$
+
+    \subsubsection{eqno}
+
+    \subsubsection{leqno}
+
+    \subsubsection{Equation numbers}
+
+      Put an equation number on given display math.
+
+      Only typesets the number: you have to increment them yourself.
+
+      Only works for display math.
+
+      \code{leqno} puts the number on the left.
+
+      $$ x^2 \eqno{1} $$
+
+      $$ x^2 \leqno{2} $$
+
+    \subsubsection{over}
+
+      Fractions.
+
+      $$ab + cd \over ef + gh$$
+
+      $$ab + {cd \over ef} + gh$$
+
+    \subsubsection{atop}
+
+      Like over but without separator.
+
+      $$ab + cd \atop ef + gh$$
+
+      $$ab + {cd \atop ef} + gh$$
+
+    \subsubsection{above}
+
+      Like over, but you can control the width of the separator:
+
+      $$a \above 0pt b$$
+
+      $$a \above 0.5pt b$$
+
+      $$a \above 1pt b$$
+
+      $$a \above 2pt b$$
+
+      Therefore, over and atop can be defined in terms of this (0.4pt and 0pt respectively).
+
+    \subsubsection{left}
+
+    \subsubsection{right}
+
+      Big delimiter characters.
+
+      Every left must have a right, but delimiters don't need to match:
+
+      $$\left( {a \over b} \right)$$
+
+      $$\left( {a \over b} \right]$$
+
+      $$\left( {a \over b} \right\}$$
+
+      $$\left( {a \over b} \right>$$
+
+      Omit one of the delimiters with a dot:
+
+      $$\left( {a \over b} \right.$$
+
+
+\section{every commands}
+
+  There are a few command prefixed by every that add something before every construct of a type:
+
+  \item{} everypar
+  \item{} everydisplay
+  \item{} everymath
+  \item{} everycr
+  \item{} everyjob
 
 \section{Error messages}
 

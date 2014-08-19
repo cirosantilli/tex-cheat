@@ -1,15 +1,19 @@
 INS      = $(wildcard *.tex)
-OUTS     = $(patsubst %.tex,%.div,$(INS))
+OUTS     = $(patsubst %.tex,%.dvi,$(INS))
+OUTS_PDF = $(patsubst %.tex,%.pdf,$(INS))
 
 .PHONY: all kill watch view
 
-all: $(OUTS)
+all: $(OUTS) $(OUTS_PDF)
 
-%.div: %.tex
+%.dvi: %.tex
 	tex -interaction=nonstopmode --shell-escape '$<'
 
+%.pdf: %.dvi
+	dvipdfm '$<'
+
 clean:
-	rm -f *.dvi *.log *.tmp
+	rm -f *.dvi *.log *.pdf *.tmp
 
 view: all
 	xdg-open main.dvi

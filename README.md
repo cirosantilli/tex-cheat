@@ -6,11 +6,9 @@ Tested with TeX Live 2013 ISO on Ubuntu 12.04, but should be portable.
 
 Aims understand what TeX does in minute detail.
 
-Most of this is not useful most of the time for end users who should use LaTeX instead. For a LaTeX cheatsheet see: <https://github.com/cirosantilli/latex-cheat>
+Most of this is not useful most of the time for end users who should use LaTeX high level macros instead. For a LaTeX cheatsheet see: <https://github.com/cirosantilli/latex-cheat>. However, most TeX primitives can also be used in LaTeX.
 
-The base TeX system understands about 300 commands, called primitives, which are rarely used by end users.
-
-TeX Live primitives: <http://www.tug.org/utilities/plain/cseq.html>
+The base TeX system understands about 300 commands, called primitives, which are rarely used by end users. TeX Live primitives: <http://www.tug.org/utilities/plain/cseq.html>. **Keep this under your pillow**!
 
 TeX was created much earlier than LaTeX by Knuth in TODO. Leslie Lamport then built LaTeX on top of it in TODO.
 
@@ -30,7 +28,9 @@ The source has since been transpiled to C, and the C result is today called Web2
 
 ## TeX output formats
 
-TODO can TeX output PDF? What are the supported output formats? The main (only) output format for `tex` is DVI, which was created for TeX, and can then be converted to other formats like PDF. `pdflatex` converts to PDF natively, and thus allows more PDF options like URLs.
+TODO can TeX output PDF? What are the supported output formats? The main (TODO only) output format for `tex` is DVI, which was created for TeX, and can then be converted to other formats like PDF. `pdflatex` converts to PDF natively, and thus allows more PDF options like URLs.
+
+DVI can be converted quite well to PDF through `dvipdfm` which comes with TeX Live 2013 ISO. Text layer is kept and the output PDF looks good.
 
 It seems that `pdflatex` is a complete rewrite with options only supported there: <http://tex.stackexchange.com/questions/70854/how-can-i-save-shell-output-to-a-variable-in-latex>
 
@@ -39,6 +39,14 @@ It seems that `pdflatex` is a complete rewrite with options only supported there
 -   <http://en.wikipedia.org/wiki/TeX>
 
     Very good background info.
+
+-   <http://en.wikibooks.org/wiki/LaTeX/Plain_TeX>
+
+    Short but good info on plain TeX concepts from the LaTeX wikibook.
+
+-   <http://en.wikibooks.org/wiki/TeX>
+
+    Good examples on every TeX primitive.
 
 -   <https://www.gnu.org/software/teximpatient>
 
